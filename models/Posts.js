@@ -6,7 +6,7 @@ const postSchema= mongoose.Schema({
         type:String,
         required:true
     },
-    firtName:{
+    firstName:{
         type:String,
         required:true
     }

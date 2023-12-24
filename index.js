@@ -14,6 +14,9 @@ import { fileURLToPath } from "url";
 import { register } from "./controllers/auth.js";  
 import {createPost} from './controllers/posts.js' 
 import { verifyToken } from "./middleware/auth.js";
+import {users ,posts} from "./data/index.js"
+import User from "./models/User.js";
+import Post from "./models/Posts.js";
 
 /* CONFUGURATION  Middlewere*/
 // in case module
@@ -49,7 +52,6 @@ app.post("/auth/register",upload.single("picture"),register);
 app.post('/posts',verifyToken,upload.single("picture"),createPost);
 /* Auth Router */
 
-app.get('/',(r,s)=>s.send("<h2>Hello</h2>"))
 app.use('/auth',authRoutes);
 app.use('/user',userRoutes);
 app.use('/posts',postsRoutes);
@@ -59,5 +61,7 @@ const PORT=process.env.PORT||2001;
 mongoose.connect(process.env.MONGODB_URL)
 .then(()=>{
     app.listen(PORT,()=>console.log(`server port ${PORT}`))
+    // User.insertMany(users);
+    // Post.insertMany(posts);
 })
 .catch((error)=>console.log(`${error} did not connect`));

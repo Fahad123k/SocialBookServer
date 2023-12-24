@@ -5,14 +5,14 @@ import User from "../models/User.js"
 
 export const createPost=async (req,res)=>{
     try {
-        const {userId,decription,pictureath}=req.params;
+        const {userId,decription,picturePath}=req.params;
         const user=User.findById(userId);
         const newPost =new Post({
             userId,
             firstName:user.firstName,
             lastName:user.lastName,
             location:user.location,
-            description,
+            decription,
             userPicturePath:user.picturePath,
             picturePath,
             likes:{},
@@ -64,7 +64,7 @@ export const likePost=async(req,res)=>{
             post.likes.set(userId,true)
         }
 
-        const updatePost= await Post.findByIdAndUpdate(
+        const updatedPost= await Post.findByIdAndUpdate(
             id,
             {likes:post.likes},
             {new :true},
