@@ -7,9 +7,13 @@ import helmet from "helmet"
 import morgan from "morgan"
 import mongoose from "mongoose"
 import authRoutes from "./routes/auth.js"
+import userRoutes from "./routes/user.js"
+import postsRoutes from "./routes/posts.js"
 import path from "path";
 import { fileURLToPath } from "url";
-import { register } from "./controllers/auth.js";   
+import { register } from "./controllers/auth.js";  
+import {createPost} from './controllers/posts.js' 
+import { verifyToken } from "./middleware/auth.js";
 
 /* CONFUGURATION  Middlewere*/
 // in case module
@@ -19,7 +23,6 @@ dotenv.config();
 const app=express();
 app.use(express.json());
 app.use(helmet());
-// app.use(helmet.crossOriginResoursePolicy({policy:"cross-origin"}))
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("common"));
 app.use(bodyParser.json({limit:"30mb",extended:true}))
@@ -43,9 +46,14 @@ const upload=multer({storage});
 
 /* ROUTER with upload */
 app.post("/auth/register",upload.single("picture"),register);
+app.post('/posts',verifyToken,upload.single("picture"),createPost);
 /* Auth Router */
 
+app.get('/',(r,s)=>s.send("<h2>Hello</h2>"))
 app.use('/auth',authRoutes);
+app.use('/user',userRoutes);
+app.use('/posts',postsRoutes);
+
 const PORT=process.env.PORT||2001;
 
 mongoose.connect(process.env.MONGODB_URL)
